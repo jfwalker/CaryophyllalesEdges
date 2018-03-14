@@ -116,6 +116,7 @@ if($ARGV[0] ne "go"){
 	$count = 0; $clade = ""; @array = ();
 	@children = (); @tree = (); @species = ();
 	@trout = (); @likelihoods = ();
+	@diffs = ();
 	foreach $keys (sort keys %RelHash){
 		
 		@array = split " ", $RelHash{$keys};
@@ -127,6 +128,10 @@ if($ARGV[0] ne "go"){
 			push @tree, $RelHash{$keys};
 			$t = $count+1;
 			#print "$t\n";
+			$diff = $TopLikely - abs($keys);
+			$diff = abs($diff);
+			push @diffs, $diff;
+			push @likelihoods, $keys;
 			push @trout, $t;
 			
 		}else{
@@ -136,9 +141,13 @@ if($ARGV[0] ne "go"){
 			if($test ne ""){
 				
 				push @tree, $RelHash{$keys};
-				print "$keys\n";
+				#print "$keys\n";
 				$t = $count+1;
 				#print "$t\n";
+				$diff = $TopLikely - abs($keys);
+				$diff = abs($diff);
+				push @diffs, $diff;
+				push @likelihoods, $keys;
 				push @trout, $t;
 			}
 				
@@ -146,13 +155,16 @@ if($ARGV[0] ne "go"){
 		$count++;
 	}
 
-	
+	open(out, ">Bipartition_Analysis.txt");
+	open(TreesOut, ">ForConsensusTreeMaker.tre");
 	#Assemble the best biparts
+	print out "Likelihood\tDifference in Likelihood\tBiparititon\n";
 	$clade = ""; @clades = ();
 	$numb = 0; %HASH = ();
 	foreach $i (0..$#tree){
 		
-		print "$tree[$i]\n";
+		print out "$likelihoods[$i]\t$diffs[$i]\t$tree[$i]\n";
+		print TreesOut "($tree[$i]);\n";
 		@array = split " ", $tree[$i]; 
 		$numb = ($#array + 1);
 		$clade = $tree[$i];
