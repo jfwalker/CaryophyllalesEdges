@@ -44,12 +44,12 @@ sub CheckOnlyClade{
 			
 			$unique_count++;
 			
-		}elsif($loss == ($#array1+1)){ 
+		}elsif($loss == ($#array1+1) && $#array1 != $#array2){ 
 		#2) if the unique count has not gone up check if it has decreased by the equivalent amount to
 		#the number originally available in the relationship test ($#array1)
 			$inner_count++;
 			
-		}elsif($tree_loss == ($#array2+1)){
+		}elsif($tree_loss == ($#array2+1) && $#array1 != $#array2){
 			$inner_count++;
 		}
 	}
@@ -163,8 +163,12 @@ if($ARGV[0] ne "go"){
 	$numb = 0; %HASH = ();
 	foreach $i (0..$#tree){
 		
+		
+		$tree[$i] =~ s/ /,/g;
 		print out "$likelihoods[$i]\t$diffs[$i]\t$tree[$i]\n";
 		print TreesOut "($tree[$i]);\n";
+				
+		#print "$likelihoods[$i]\t$diffs[$i]\t$tree[$i]\n";
 		@array = split " ", $tree[$i]; 
 		$numb = ($#array + 1);
 		$clade = $tree[$i];
